@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
@@ -7,6 +8,7 @@ import '../../core/storage/storage.dart'; // ✅ Asegúrate de importar Storage 
 class MyFirebaseMessagingService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final Dio _dio = Dio(BaseOptions(baseUrl: "https://vecindappback-production.up.railway.app"));
+  final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
 
   /// ✅ Inicializar notificaciones FCM
   Future<void> initNotifications() async {
@@ -38,8 +40,40 @@ class MyFirebaseMessagingService {
     }
 
     // 📌 **Escuchar notificaciones en diferentes estados de la app**
+    _configureLocalNotifications();
     _configureForegroundNotifications();
     _configureBackgroundNotifications();
+  }
+
+  /// ✅ Configurar Notificaciones Locales
+  void _configureLocalNotifications() {
+    const AndroidInitializationSettings androidInitSettings =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    final InitializationSettings initSettings = InitializationSettings(
+      android: androidInitSettings,
+    );
+
+    _localNotifications.initialize(initSettings);
+  }
+
+  /// ✅ Mostrar Notificación en Primer Plano
+  Future<void> _showNotification(RemoteMessage message) async {
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'default_channel',
+      'Notificaciones',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    const NotificationDetails notificationDetails = NotificationDetails(android: androidDetails);
+
+    await _localNotifications.show(
+      0, // ID de la notificación
+      message.notification?.title ?? "Sin título",
+      message.notification?.body ?? "Sin contenido",
+      notificationDetails,
+    );
   }
 
   /// ✅ Guardar el token en SharedPreferences para evitar llamadas innecesarias
@@ -85,6 +119,9 @@ class MyFirebaseMessagingService {
       print("   🔹 Título: ${message.notification?.title}");
       print("   🔹 Cuerpo: ${message.notification?.body}");
       print("   🔹 Datos: ${message.data}");
+
+      // **Mostrar la notificación localmente**
+      _showNotification(message);
     });
   }
 
