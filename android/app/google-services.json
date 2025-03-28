@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "29247945160",
+    "project_id": "vecindapp-flutter",
+    "storage_bucket": "vecindapp-flutter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:29247945160:android:c066f58ee13164cbaae8fd",
+        "android_client_info": {
+          "package_name": "com.example.vecindapp_residente"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApWhLjrdsFyPaK_S1_j55QZKDkehidxwQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/services/MyFirebaseMessagingService.dart';
 import '../../../core/storage/storage.dart';
 import '../../../login/presentation/pages/login_page.dart';
 import '../blocs/residential_bloc.dart';
 import '../widgets/residential_card.dart';
 import '../widgets/custom_appbar_clipper.dart'; // ✅ Importamos el CustomAppBarClipper
-import '../../../core/services/firebase_service.dart';
+
 
 class AdminPage extends StatefulWidget {
   @override
@@ -13,12 +14,12 @@ class AdminPage extends StatefulWidget {
 }
 
 class _AdminPageState extends State<AdminPage> {
-  final FirebaseService _firebaseService = FirebaseService();
+  final MyFirebaseMessagingService _firebaseMessagingService = MyFirebaseMessagingService();
   @override
   void initState() {
     super.initState();
     context.read<ResidentialBloc>().add(FetchResidentials());
-    _firebaseService.initializeFCM();
+    _firebaseMessagingService.initNotifications();
   }
 
   void _logout(BuildContext context) async {

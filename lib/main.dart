@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,8 +16,15 @@ import 'core/storage/storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final String? token = await Storage.getToken();
 
+  try {
+    await Firebase.initializeApp(); // ✅ Inicializa Firebase
+    print("✅ Firebase inicializado correctamente");
+  } catch (e) {
+    print("❌ Error al inicializar Firebase: $e");
+  }
+
+  final String? token = await Storage.getToken();
   runApp(MyApp(isAuthenticated: token != null));
 }
 
@@ -41,7 +49,7 @@ class MyApp extends StatelessWidget {
             final residentialBloc = ResidentialBloc(
               ResidentialRepositoryImpl(ResidentialRemoteDataSource(context)),
             );
-            residentialBloc.setContext(context); // esto para manejar token expirado
+            residentialBloc.setContext(context); // Manejar token expirado
             return residentialBloc;
           },
         ),
