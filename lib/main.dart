@@ -13,6 +13,7 @@ import 'home/data/repositories/residential_repository_impl.dart';
 import 'home/presentation/blocs/residential_bloc.dart';
 import 'home/presentation/pages/admin_page.dart';
 import 'core/storage/storage.dart';
+import 'package:no_screenshot/no_screenshot.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,8 +24,11 @@ void main() async {
   } catch (e) {
     print("❌ Error al inicializar Firebase: $e");
   }
-
+  
   final String? token = await Storage.getToken();
+
+  final _noScreenshot = NoScreenshot.instance;
+  await _noScreenshot.screenshotOff();
   runApp(MyApp(isAuthenticated: token != null));
 }
 
